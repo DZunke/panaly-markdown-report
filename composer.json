@@ -1,0 +1,41 @@
+{
+    "name": "dzunke/panaly-markdown-report",
+    "description": "A Panaly plugin that delivers the capability to generate a markdown report.",
+    "type": "library",
+    "license": "MIT",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "DZunke\\PanalyMarkdownReport\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "DZunke\\PanalyMarkdownReport\\Test\\": "tests/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Denis Zunke",
+            "email": "denis.zunke@gmail.com"
+        }
+    ],
+    "require": {
+        "dzunke/panaly": "dev-main",
+        "php": "^8.2"
+    },
+    "require-dev": {
+        "doctrine/coding-standard": "^12.0",
+        "phpstan/phpstan": "^1.10",
+        "phpstan/phpstan-deprecation-rules": "^1.1",
+        "phpstan/phpstan-strict-rules": "^1.5",
+        "phpunit/phpunit": "^11.1",
+        "symfony/var-dumper": "^7.0"
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
+    }
+}
