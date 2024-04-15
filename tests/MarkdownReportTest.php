@@ -39,6 +39,9 @@ class MarkdownReportTest extends TestCase
         self::assertIsString($markdownReportFile);
         self::assertStringContainsString('# First Title', $markdownReportFile);
         self::assertStringContainsString('This report was generated at', $markdownReportFile);
+
+        // Summarizes Scalar Values Table
+        self::assertStringContainsString('### Summarized Scalar Values', $markdownReportFile);
         self::assertStringContainsString('| A Metric       | 1     |', $markdownReportFile);
 
         // Assertions for the table

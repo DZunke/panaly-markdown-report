@@ -72,14 +72,9 @@ final readonly class MarkdownReport implements Reporting
             return;
         }
 
-        /** @var list<array> $integerValues */
-        $integerValues = []; // Collect the Integer values as they will be combined to a table
+        /** @var list<array> $scalarValues */
+        $scalarValues = []; // Collect the scalar values as they will be combined to a table
         foreach ($metrics as $metric) {
-            if ($metric->value instanceof Metric\Integer) {
-                $integerValues[] = [$metric->title, $metric->value->compute()];
-                continue;
-            }
-
             if ($metric->value instanceof Metric\Table) {
                 $document->addLines();
                 $document->heading($metric->title, 3);
@@ -91,13 +86,15 @@ final readonly class MarkdownReport implements Reporting
                 continue;
             }
 
-            $document->writeLine($metric->title . ' - ' . $metric->value->compute())->addLines();
+            $scalarValues[] = [$metric->title, $metric->value->compute()];
         }
 
-        if ($integerValues === []) {
+        if ($scalarValues === []) {
             return;
         }
 
-        $document->table()->columns(['Metric', 'Value'])->rows($integerValues)->end();
+        $document->addLines();
+        $document->heading('Summarized Scalar Values', 3);
+        $document->table()->columns(['Metric', 'Value'])->rows($scalarValues)->end();
     }
 }
