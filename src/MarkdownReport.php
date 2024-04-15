@@ -87,8 +87,5 @@ final readonly class MarkdownReport implements Reporting
         }
 
         $document->table()->columns(['Metric', 'Value'])->rows($integerValues)->end();
-
-        /* array_unshift($integerValues, ['Metric', 'Value']);
-        $document->table($integerValues); */
     }
 }

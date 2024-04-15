@@ -29,7 +29,7 @@ plugins:
 
 reporting:
     markdown:
-        target: my-markdown-report.md
+        targetFile: my-markdown-report.md
 ```
 
 ## Thanks and License
