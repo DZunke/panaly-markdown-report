@@ -41,6 +41,8 @@ class Table
     {
         $columnLengths = $this->getColumnLengths();
 
+        $this->document->addLines();
+
         // Header
         $headerLine    = '';
         $delimeterLine = '';
@@ -60,6 +62,8 @@ class Table
 
             $this->document->writeLine($rowLine . '|');
         }
+
+        $this->document->addLines();
 
         return $this->document;
     }

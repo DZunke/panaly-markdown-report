@@ -22,8 +22,12 @@ class MarkdownReportTest extends TestCase
         $group->addMetric(new Metric('Another Metric', new Metric\Integer(2000)));
         $group->addMetric(new Metric('Wow! A Metric', new Metric\Integer(12)));
 
+        $group2 = new Group('Second Title');
+        $group2->addMetric(new Metric('A table metric', new Metric\Table(['foo'], [['bar'], ['baz']])));
+
         $result = new Result();
         $result->addGroup($group);
+        $result->addGroup($group2);
 
         $markdownReport = new MarkdownReport();
         $markdownReport->report($result, ['targetFile' => 'foo-bar.md']);
@@ -36,6 +40,10 @@ class MarkdownReportTest extends TestCase
         self::assertStringContainsString('# First Title', $markdownReportFile);
         self::assertStringContainsString('This report was generated at', $markdownReportFile);
         self::assertStringContainsString('| A Metric       | 1     |', $markdownReportFile);
+
+        // Assertions for the table
+        self::assertStringContainsString('### A table metric', $markdownReportFile);
+        self::assertStringContainsString("| foo |\n|-----|\n| bar |\n| baz |", $markdownReportFile);
 
         @unlink('foo-bar.md');
     }

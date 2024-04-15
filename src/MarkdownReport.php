@@ -12,6 +12,7 @@ use Panaly\Result\Metric;
 use Panaly\Result\Result;
 
 use function file_put_contents;
+use function is_scalar;
 
 final readonly class MarkdownReport implements Reporting
 {
@@ -30,8 +31,8 @@ final readonly class MarkdownReport implements Reporting
             ->title('Metric Report')
             ->addLines()
             ->alert()
-                ->note()
-                ->message('This report was generated at `' . $createdAtDate . '`')
+            ->note()
+            ->message('This report was generated at `' . $createdAtDate . '`')
             ->end()
             ->addLines(2);
 
@@ -76,6 +77,17 @@ final readonly class MarkdownReport implements Reporting
         foreach ($metrics as $metric) {
             if ($metric->value instanceof Metric\Integer) {
                 $integerValues[] = [$metric->title, $metric->value->compute()];
+                continue;
+            }
+
+            if ($metric->value instanceof Metric\Table) {
+                $document->addLines();
+                $document->heading($metric->title, 3);
+                $document->table()->columns($metric->value->columns)->rows($metric->value->rows)->end();
+            }
+
+            $metricResult = $metric->value->compute();
+            if (! is_scalar($metricResult)) {
                 continue;
             }
 
