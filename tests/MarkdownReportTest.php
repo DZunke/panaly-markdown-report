@@ -18,9 +18,9 @@ class MarkdownReportTest extends TestCase
     public function testTheReportGenerationIsWorking(): void
     {
         $group = new Group('First Title');
-        $group->addMetric(new Metric('A Metric', new Metric\Integer(1)));
-        $group->addMetric(new Metric('Another Metric', new Metric\Integer(2000)));
-        $group->addMetric(new Metric('Wow! A Metric', new Metric\Integer(12)));
+        $group->addMetric(new Metric('A Metric', new Metric\IntegerValue(1)));
+        $group->addMetric(new Metric('Another Metric', new Metric\IntegerValue(2000)));
+        $group->addMetric(new Metric('Wow! A Metric', new Metric\IntegerValue(12)));
 
         $group2 = new Group('Second Title');
         $group2->addMetric(new Metric('A table metric', new Metric\Table(['foo'], [['bar'], ['baz']])));
