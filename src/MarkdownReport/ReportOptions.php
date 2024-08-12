@@ -21,6 +21,7 @@ readonly class ReportOptions
         }
     }
 
+    /** @param array<string, mixed> $options */
     public static function fromArray(array $options): ReportOptions
     {
         return new self(

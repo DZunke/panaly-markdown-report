@@ -72,7 +72,7 @@ final readonly class MarkdownReport implements Reporting
             return;
         }
 
-        /** @var list<array> $scalarValues */
+        /** @var list<array<mixed>> $scalarValues */
         $scalarValues = []; // Collect the scalar values as they will be combined to a table
         foreach ($metrics as $metric) {
             if ($metric->value instanceof Metric\Table) {
@@ -81,12 +81,12 @@ final readonly class MarkdownReport implements Reporting
                 $document->table()->columns($metric->value->columns)->rows($metric->value->rows)->end();
             }
 
-            $metricResult = $metric->value->compute();
+            $metricResult = $metric->value->format();
             if (! is_scalar($metricResult)) {
                 continue;
             }
 
-            $scalarValues[] = [$metric->title, $metric->value->compute()];
+            $scalarValues[] = [$metric->title, $metric->value->format()];
         }
 
         if ($scalarValues === []) {

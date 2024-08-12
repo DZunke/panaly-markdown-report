@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace DZunke\PanalyMarkdownReport\Test;
 
 use DZunke\PanalyMarkdownReport\MarkdownReport;
+use DZunke\PanalyMarkdownReport\MarkdownReport\Exception\InvalidOptions;
 use Panaly\Result\Group;
 use Panaly\Result\Metric;
 use Panaly\Result\Result;
@@ -17,13 +18,13 @@ class MarkdownReportTest extends TestCase
 {
     public function testTheReportGenerationIsWorking(): void
     {
-        $group = new Group('First Title');
-        $group->addMetric(new Metric('A Metric', new Metric\IntegerValue(1)));
-        $group->addMetric(new Metric('Another Metric', new Metric\IntegerValue(2000)));
-        $group->addMetric(new Metric('Wow! A Metric', new Metric\IntegerValue(12)));
+        $group = new Group('foo', 'First Title');
+        $group->addMetric(new Metric('foo', 'A Metric', new Metric\IntegerValue(1)));
+        $group->addMetric(new Metric('bar', 'Another Metric', new Metric\IntegerValue(2000)));
+        $group->addMetric(new Metric('baz', 'Wow! A Metric', new Metric\IntegerValue(12)));
 
-        $group2 = new Group('Second Title');
-        $group2->addMetric(new Metric('A table metric', new Metric\Table(['foo'], [['bar'], ['baz']])));
+        $group2 = new Group('foo', 'Second Title');
+        $group2->addMetric(new Metric('foo', 'A table metric', new Metric\Table(['foo'], [['bar'], ['baz']])));
 
         $result = new Result();
         $result->addGroup($group);
@@ -49,5 +50,53 @@ class MarkdownReportTest extends TestCase
         self::assertStringContainsString("| foo |\n|-----|\n| bar |\n| baz |", $markdownReportFile);
 
         @unlink('foo-bar.md');
+    }
+
+    public function testEmptyGroups(): void
+    {
+        $result = new Result();
+
+        $markdownReport = new MarkdownReport();
+        $markdownReport->report($result, ['targetFile' => 'empty-groups.md']);
+
+        self::assertFileExists('empty-groups.md');
+
+        $markdownReportFile = file_get_contents('empty-groups.md');
+
+        self::assertIsString($markdownReportFile);
+        self::assertStringContainsString('This report was generated at', $markdownReportFile);
+
+        @unlink('empty-groups.md');
+    }
+
+    public function testInvalidOptions(): void
+    {
+        $this->expectException(InvalidOptions::class);
+
+        $result         = new Result();
+        $markdownReport = new MarkdownReport();
+        $markdownReport->report($result, ['targetFile' => '/invalid/path/foo-bar.md']);
+    }
+
+    public function testFormatting(): void
+    {
+        $group = new Group('foo', 'Formatting Test');
+        $group->addMetric(new Metric('foo', 'A Metric', new Metric\IntegerValue(1)));
+
+        $result = new Result();
+        $result->addGroup($group);
+
+        $markdownReport = new MarkdownReport();
+        $markdownReport->report($result, ['targetFile' => 'formatting-test.md']);
+
+        self::assertFileExists('formatting-test.md');
+
+        $markdownReportFile = file_get_contents('formatting-test.md');
+
+        self::assertIsString($markdownReportFile);
+        self::assertStringContainsString('# Formatting Test', $markdownReportFile);
+        self::assertStringContainsString('| A Metric | 1     |', $markdownReportFile);
+
+        @unlink('formatting-test.md');
     }
 }
