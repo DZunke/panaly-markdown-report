@@ -4,13 +4,18 @@ declare(strict_types=1);
 
 namespace DZunke\PanalyMarkdownReport;
 
-use Panaly\Plugin\BasePlugin;
+use Panaly\Configuration\ConfigurationFile;
+use Panaly\Configuration\RuntimeConfiguration;
+use Panaly\Plugin\Plugin;
 
-final class MarkdownPlugin extends BasePlugin
+final class MarkdownPlugin implements Plugin
 {
     /** @inheritDoc */
-    public function getAvailableReporting(array $options): array
-    {
-        return [new MarkdownReport()];
+    public function initialize(
+        ConfigurationFile $configurationFile,
+        RuntimeConfiguration $runtimeConfiguration,
+        array $options,
+    ): void {
+        $runtimeConfiguration->addReporting(new MarkdownReport());
     }
 }
