@@ -44,6 +44,11 @@ class Table
 
     public function end(): MarkdownDocument
     {
+        if ($this->columns === []) {
+            // There are no columns, so it is left empty in rendering
+            return $this->document;
+        }
+
         $columnLengths = $this->getColumnLengths();
 
         $this->document->addLines();
@@ -76,12 +81,20 @@ class Table
     /** @return list<int> */
     private function getColumnLengths(): array
     {
+        if (count($this->columns) === 0) {
+            return [];
+        }
+
         $columnCount   = count($this->columns);
         $columnLengths = array_fill(0, $columnCount, 3);
 
         for ($i = 0; $i < $columnCount; ++$i) {
             $headerLength      = strlen($this->columns[$i]);
             $columnLengths[$i] = max($headerLength, 3);
+
+            if (count($this->rows) === 0) {
+                continue;
+            }
 
             $columValues       = array_map(static fn ($row) => strlen((string) $row[$i]), $this->rows);
             $columnLengths[$i] = max($columnLengths[$i], ...$columValues);
